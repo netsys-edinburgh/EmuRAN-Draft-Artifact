@@ -1,7 +1,7 @@
-# Chronos Artifact (Draft)
+# EmuRAN Artifact (Draft)
 
-This repository contains the draft artifact for **Chronos: Cloud based RAN
-Digital Twin**. Chronos is a cloud-deployable RAN emulation system built around
+This repository contains the draft artifact for **EmuRAN: Cloud based RAN
+Digital Twin**. EmuRAN is a cloud-deployable RAN emulation system built around
 four ideas described in Sections 4 and 5 of the paper:
 
 1. Bypass the compute- and bandwidth-intensive PHY layer using nFAPI.
@@ -19,7 +19,7 @@ scripts for selected evaluation results.
 
 | Directory | Contents |
 | --- | --- |
-| [`code/`](code/) | Chronos's virtual-time, synchronization, middlebox, gNB, and UE implementations. |
+| [`code/`](code/) | EmuRAN's virtual-time, synchronization, middlebox, gNB, and UE implementations. |
 | [`deployment/`](deployment/) | Infrastructure provisioning scripts and Helm charts for deploying experiments. |
 | [`results/`](results/) | Raw logs, packet captures, processed data, and plotting scripts for selected paper results. |
 
@@ -27,7 +27,7 @@ scripts for selected evaluation results.
 
 | Path | Role |
 | --- | --- |
-| [`code/supervisor/`](code/supervisor/) | Patched Linux 5.15 kernel source used by the Chronos supervisor. The KVM/VMX path serves guest `RDTSC` reads from the virtual TSC exported by the Chronos clock module, allowing guest time to be advanced or paused independently of wall-clock time. |
+| [`code/supervisor/`](code/supervisor/) | Patched Linux 5.15 kernel source used by the EmuRAN supervisor. The KVM/VMX path serves guest `RDTSC` reads from the virtual TSC exported by the EmuRAN clock module, allowing guest time to be advanced or paused independently of wall-clock time. |
 | [`code/slot_monitor/`](code/slot_monitor/) | The `custom_tsc` kernel module and user-space shared-memory/slot-monitor utilities. The module advances the virtual TSC with a high-resolution timer and exposes the control path used to pause time at a slot boundary and resume it for the next slot. The directory also contains development variants and test programs. |
 | [`code/middlebox/`](code/middlebox/) | Modified multi-UE nFAPI proxy. It routes PHY-bypass traffic between gNBs and UEs, tracks local slot completion, communicates with the global slot coordinator, and supports distributing the forwarding load across proxy instances. |
 | [`code/gnb/`](code/gnb/) | Bug-fixed OpenAirInterface gNB source tree. Deployments run it in nFAPI VNF and emulated-L1 mode so the real MAC-and-above stack can operate without a full PHY. |
@@ -71,7 +71,7 @@ Helm charts, container build files, and operational helper scripts:
 | --- | --- |
 | `core/` | Open5GS core and subscriber database |
 | `globalsc/` | Global slot coordinator |
-| `proxy/` | Distributed Chronos middleboxes |
+| `proxy/` | Distributed EmuRAN middleboxes |
 | `gnb/` | OAI gNB instances |
 | `ue/` | OAI UE instances and data-plane measurement sidecars |
 | `persistue/` | Persistent UE support used by selected experiments |
@@ -93,14 +93,14 @@ subsystem experiments in Section 6 of the paper.
 
 | Path | Experiment or output |
 | --- | --- |
-| `LargeScale/` | Chronos and EMANE scale sweeps, including per-UE control/data-plane logs, core logs, global coordinator logs, and Kubernetes snapshots. |
+| `LargeScale/` | EmuRAN and EMANE scale sweeps, including per-UE control/data-plane logs, core logs, global coordinator logs, and Kubernetes snapshots. |
 | `EMANE/` | Additional raw EMANE scale-run logs. |
 | `fig9a/` | Data-plane RTT as the number of emulated gNB/UE pairs increases. |
 | `fig9b/` | Fraction of attempted UEs that establish a working data plane as scale increases. |
 | `fig9c/` | Global slot-coordinator arrival spread and dilation-factor analysis. |
 | `fig9d/` | CPU cost of splitting the middlebox load across proxy instances. |
 | `fig10a/` | Packet-capture analysis of per-slot middlebox processing/wait time at different loads. |
-| `fig10b/` | Chronos-versus-EMANE data-plane RTT on the testbed and Azure. |
+| `fig10b/` | EmuRAN-versus-EMANE data-plane RTT on the testbed and Azure. |
 | `fig10c/` | Effect of induced compute preemptions on UE RTT and the dilation factor. |
 | `fig10d/` | Effect of induced network delay on UE RTT and the dilation factor. |
 
