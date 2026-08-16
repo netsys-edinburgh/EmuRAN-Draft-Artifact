@@ -1,0 +1,125 @@
+diff --git a/executables/nr-softmodem.c b/executables/nr-softmodem.c
+index aa8dd6025e..f3b06ef5d2 100644
+--- a/executables/nr-softmodem.c
++++ b/executables/nr-softmodem.c
+@@ -618,9 +618,27 @@ static void initialize_agent(ngran_node_t node_type, e2_agent_args_t oai_args)
+ }
+ #endif
+ 
++uint32_t gnb_ip_addr;
++
++void fill_gnb_ip_addr() {
++    FILE *fptr = fopen("/gnb_ip_addr", "r");
++    if (fptr == NULL) {
++        printf("Unable to open /gnb_ip_addr, defaulting IP to INADDR_ANY\n");
++        gnb_ip_addr = INADDR_ANY;
++        return;
++    }
++    char gnb_ip_addr_str[16];
++    fgets(gnb_ip_addr_str, 16, fptr);
++    fclose(fptr);
++    gnb_ip_addr = inet_addr(gnb_ip_addr_str);
++    printf("gNB IP addr: %s (%u)\n", gnb_ip_addr_str, gnb_ip_addr);
++    return;
++}
++
+ configmodule_interface_t *uniqCfg = NULL;
+ int main( int argc, char **argv ) {
+   int ru_id, CC_id = 0;
++  fill_gnb_ip_addr();
+   start_background_system();
+ 
+   ///static configuration for NR at the moment
+diff --git a/nfapi/open-nFAPI/pnf/src/pnf_p7.c b/nfapi/open-nFAPI/pnf/src/pnf_p7.c
+index a7e7e0cb6e..6bfd26f948 100644
+--- a/nfapi/open-nFAPI/pnf/src/pnf_p7.c
++++ b/nfapi/open-nFAPI/pnf/src/pnf_p7.c
+@@ -31,6 +31,8 @@
+ 
+ #define FAPI2_IP_DSCP	0
+ 
++extern uint32_t gnb_ip_addr;
++
+ extern uint16_t sf_ahead;
+ 
+ //uint16_t sf_ahead=4;
+@@ -3064,7 +3066,7 @@ int pnf_p7_message_pump(pnf_p7_t* pnf_p7)
+ 
+ 	if(pnf_p7->_public.local_p7_addr == 0)
+ 	{
+-		addr.sin_addr.s_addr = INADDR_ANY;
++		addr.sin_addr.s_addr = gnb_ip_addr;
+ 	}
+ 	else
+ 	{
+@@ -3236,7 +3238,7 @@ int pnf_nr_p7_message_pump(pnf_p7_t* pnf_p7)
+ 
+ 	if(pnf_p7->_public.local_p7_addr == 0)
+ 	{
+-		addr.sin_addr.s_addr = INADDR_ANY;
++		addr.sin_addr.s_addr = gnb_ip_addr;
+ 	}
+ 	else
+ 	{
+diff --git a/nfapi/open-nFAPI/vnf/src/vnf_interface.c b/nfapi/open-nFAPI/vnf/src/vnf_interface.c
+index ee9f8a3f02..7c3d0783bb 100644
+--- a/nfapi/open-nFAPI/vnf/src/vnf_interface.c
++++ b/nfapi/open-nFAPI/vnf/src/vnf_interface.c
+@@ -31,7 +31,7 @@
+ 
+ #include "vnf.h"
+ 
+-
++extern uint32_t gnb_ip_addr;
+ 
+ nfapi_vnf_config_t* nfapi_vnf_config_create()
+ {
+@@ -260,7 +260,7 @@ int nfapi_nr_vnf_start(nfapi_vnf_config_t* config)
+ 		NFAPI_TRACE(NFAPI_TRACE_INFO, "IPV4 binding to port %d\n", config->vnf_p5_port);
+ 		addr.sin_family = AF_INET;
+ 		addr.sin_port = htons(config->vnf_p5_port);
+-		addr.sin_addr.s_addr = INADDR_ANY;
++		addr.sin_addr.s_addr = gnb_ip_addr;
+ 
+ 		// bind to the configured address and port
+ 		if (bind(p5ListenSock, (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) < 0)
+@@ -665,7 +665,7 @@ int nfapi_vnf_start(nfapi_vnf_config_t* config)
+ 		NFAPI_TRACE(NFAPI_TRACE_INFO, "IPV4 binding to port %d\n", config->vnf_p5_port);
+ 		addr.sin_family = AF_INET;
+ 		addr.sin_port = htons(config->vnf_p5_port);
+-		addr.sin_addr.s_addr = INADDR_ANY;
++		addr.sin_addr.s_addr = gnb_ip_addr;
+ 
+ 		// bind to the configured address and port
+ 		if (bind(p5ListenSock, (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) < 0)
+diff --git a/nfapi/open-nFAPI/vnf/src/vnf_p7_interface.c b/nfapi/open-nFAPI/vnf/src/vnf_p7_interface.c
+index e12b10ec52..0b64d62ffc 100644
+--- a/nfapi/open-nFAPI/vnf/src/vnf_p7_interface.c
++++ b/nfapi/open-nFAPI/vnf/src/vnf_p7_interface.c
+@@ -32,6 +32,8 @@
+ #include "openair1/PHY/defs_gNB.h"
+ #define FAPI2_IP_DSCP	0
+ 
++extern uint32_t gnb_ip_addr;
++
+ extern RAN_CONTEXT_t RC;
+ 
+ nfapi_vnf_p7_config_t* nfapi_vnf_p7_config_create()
+@@ -136,7 +138,7 @@ int nfapi_nr_vnf_p7_start(nfapi_vnf_p7_config_t* config)
+ 	memset(&addr, 0, sizeof(addr));
+ 	addr.sin_family = AF_INET;
+ 	addr.sin_port = htons(config->port);
+-	addr.sin_addr.s_addr = INADDR_ANY;
++	addr.sin_addr.s_addr = gnb_ip_addr;
+ 
+ 	// bind to the configured port
+ 	NFAPI_TRACE(NFAPI_TRACE_INFO, "VNF P7 binding too %s:%d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
+@@ -282,7 +284,7 @@ int nfapi_vnf_p7_start(nfapi_vnf_p7_config_t* config)
+ 	memset(&addr, 0, sizeof(addr));
+ 	addr.sin_family = AF_INET;
+ 	addr.sin_port = htons(config->port);
+-	addr.sin_addr.s_addr = INADDR_ANY;
++	addr.sin_addr.s_addr = gnb_ip_addr;
+ 
+ 	// bind to the configured port
+ 	NFAPI_TRACE(NFAPI_TRACE_INFO, "VNF P7 binding too %s:%d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));

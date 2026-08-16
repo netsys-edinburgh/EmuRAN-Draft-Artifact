@@ -1,0 +1,4 @@
+FROM docker.io/ujjwal1997/phobos-nrue:tdd
+
+RUN apt update
+RUN apt install -y netcat-traditional
