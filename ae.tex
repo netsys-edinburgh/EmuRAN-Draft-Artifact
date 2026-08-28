@@ -156,8 +156,8 @@ manager.  On macOS, use a current Python installation from
 plotting scripts require the following Python packages:
 
 \begin{itemize}
-  \item \code{jupyter} and \code{IPython} for the notebook interface and
-  inline display;
+  \item \code{jupyter}, \code{IPython}, and \code{ipykernel} for the notebook
+  interface, inline display, and the dedicated artifact kernel;
   \item \code{numpy} for numerical processing;
   \item \code{pandas} for CSV and tabular data processing;
   \item \code{matplotlib} and \code{seaborn} for plotting; and
@@ -191,8 +191,10 @@ source .venv/bin/activate
 jupyter notebook plot.ipynb
 \end{verbatim}
 
-In the browser, select the Python kernel from the virtual environment.  Run an
-individual cell to generate one figure, or select \emph{Run All} to execute
+In the browser, select the \code{Python (Chronos Artifact)} kernel registered
+by the installer.  This ensures that PyMuPDF and the other plotting
+dependencies are available.  Run an individual cell to generate one figure,
+or select \emph{Run All} to execute
 the complete notebook.  The plotting programs use Matplotlib's
 non-interactive \code{Agg} backend, so output appears inline rather than in a
 separate desktop window.

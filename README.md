@@ -63,9 +63,10 @@ Install all dependencies into a local `.venv`:
 ./install_dependencies.sh
 ```
 
-The installer uses `requirement.txt` and installs Jupyter, IPython, NumPy,
-Pandas, Matplotlib, Seaborn, and PyMuPDF. To override the Python executable or
-environment location:
+The installer uses `requirement.txt` and installs Jupyter, IPython, IPykernel,
+NumPy, Pandas, Matplotlib, Seaborn, and PyMuPDF. It also registers the dedicated
+`Python (Chronos Artifact)` notebook kernel. To override the Python executable
+or environment location:
 
 ```bash
 PYTHON_BIN=/path/to/python3 VENV_DIR=/path/to/venv ./install_dependencies.sh
@@ -77,6 +78,10 @@ Launch the notebook from the repository root:
 source .venv/bin/activate
 jupyter notebook plot.ipynb
 ```
+
+If Jupyter prompts for a kernel, select `Python (Chronos Artifact)`. This makes
+the notebook use the environment containing PyMuPDF and the other plotting
+dependencies.
 
 Each code cell:
 

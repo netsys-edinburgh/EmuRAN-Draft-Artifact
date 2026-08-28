@@ -29,6 +29,10 @@ fi
 
 "${VENV_DIR}/bin/python" -m pip install --upgrade pip
 "${VENV_DIR}/bin/python" -m pip install -r "${PROJECT_DIR}/requirement.txt"
+"${VENV_DIR}/bin/python" -m ipykernel install \
+    --prefix "${VENV_DIR}" \
+    --name chronos-artifact \
+    --display-name "Python (Chronos Artifact)"
 
 echo
 echo "Dependencies installed successfully."
@@ -36,3 +40,4 @@ echo "Run the notebook with:"
 echo "  source \"${VENV_DIR}/bin/activate\""
 echo "  cd \"${PROJECT_DIR}\""
 echo "  jupyter notebook plot.ipynb"
+echo "Select the 'Python (Chronos Artifact)' kernel if prompted."
