@@ -33,7 +33,7 @@ UNIT_TO_MBPS = {
 
 
 def read_published_bars(notebook: Path) -> tuple[dict[str, float], dict[str, float]]:
-    """Read the published COTS and EmuRAN dictionaries from the Fig. 6a notebook."""
+    """Read the published COTS and Chronos dictionaries from the Fig. 6a notebook."""
     document = json.loads(notebook.read_text(encoding="utf-8"))
     values: dict[str, dict[str, float]] = {}
 
@@ -49,15 +49,15 @@ def read_published_bars(notebook: Path) -> tuple[dict[str, float], dict[str, flo
             if not isinstance(node, ast.Assign) or len(node.targets) != 1:
                 continue
             target = node.targets[0]
-            if isinstance(target, ast.Name) and target.id in {"cots", "emuran"}:
+            if isinstance(target, ast.Name) and target.id in {"cots", "chronos"}:
                 parsed = ast.literal_eval(node.value)
                 values[target.id] = {str(key): float(value) for key, value in parsed.items()}
 
-    if "cots" not in values or "emuran" not in values:
-        raise ValueError(f"could not find cots and emuran throughput dictionaries in {notebook}")
-    if list(values["cots"]) != list(values["emuran"]):
-        raise ValueError("COTS and EmuRAN traffic categories do not match")
-    return values["cots"], values["emuran"]
+    if "cots" not in values or "chronos" not in values:
+        raise ValueError(f"could not find cots and chronos throughput dictionaries in {notebook}")
+    if list(values["cots"]) != list(values["chronos"]):
+        raise ValueError("COTS and Chronos traffic categories do not match")
+    return values["cots"], values["chronos"]
 
 
 def read_iperf_intervals(path: Path) -> list[float]:
@@ -78,15 +78,15 @@ def read_iperf_intervals(path: Path) -> list[float]:
 
 
 def generate(fig6a_dir: Path, fig6b_dir: Path, output: Path) -> None:
-    cots_bars, emuran_bars = read_published_bars(fig6a_dir / "plot_fig6.ipynb")
+    cots_bars, chronos_bars = read_published_bars(fig6a_dir / "plot_fig6.ipynb")
     cots_trace = read_iperf_intervals(fig6b_dir / "cots.log")
-    emuran_trace = read_iperf_intervals(fig6b_dir / "chronos.log")
+    chronos_trace = read_iperf_intervals(fig6b_dir / "chronos.log")
 
     labels = list(cots_bars)
     positions = np.arange(len(labels))
     width = 0.35
     cots_color = "tab:blue"
-    emuran_color = "tab:orange"
+    chronos_color = "tab:orange"
 
     fig, (bars_ax, trace_ax) = plt.subplots(1, 2, figsize=(12, 3))
 
@@ -101,12 +101,12 @@ def generate(fig6a_dir: Path, fig6b_dir: Path, output: Path) -> None:
     )
     bars_ax.bar(
         positions + width / 2,
-        list(emuran_bars.values()),
+        list(chronos_bars.values()),
         width,
-        color=emuran_color,
+        color=chronos_color,
         edgecolor="black",
         linewidth=1.5,
-        label="EmuRAN",
+        label="Chronos",
     )
     bars_ax.set_xticks(positions, labels, fontsize=16)
     bars_ax.set_yticks([0, 10, 20, 30])
@@ -116,7 +116,7 @@ def generate(fig6a_dir: Path, fig6b_dir: Path, output: Path) -> None:
     bars_ax.set_ylabel("Throughput\n (Mbps)", fontsize=18)
 
     trace_ax.plot(cots_trace, color=cots_color, linewidth=2.5, label="COTS")
-    trace_ax.plot(emuran_trace, color=emuran_color, linewidth=2.5, label="EmuRAN")
+    trace_ax.plot(chronos_trace, color=chronos_color, linewidth=2.5, label="Chronos")
     trace_ax.set_xlabel("Time Interval (s)\n (b)", fontsize=18)
     trace_ax.set_xticks([0, 10, 20, 30])
     trace_ax.set_yticks([2, 4, 6, 8])
@@ -138,8 +138,8 @@ def generate(fig6a_dir: Path, fig6b_dir: Path, output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, bbox_inches="tight")
     plt.close(fig)
-    print(f"Bar data: COTS={list(cots_bars.values())}, EmuRAN={list(emuran_bars.values())}")
-    print(f"Trace data: COTS={len(cots_trace)} points, EmuRAN={len(emuran_trace)} points")
+    print(f"Bar data: COTS={list(cots_bars.values())}, Chronos={list(chronos_bars.values())}")
+    print(f"Trace data: COTS={len(cots_trace)} points, Chronos={len(chronos_trace)} points")
     print(f"Wrote {output}")
 
 

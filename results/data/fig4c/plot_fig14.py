@@ -29,7 +29,7 @@ x = np.arange(len(fib_ns))
 fig = plt.figure(figsize=(2,2.5))
 
 # Chronos (left bar, blue)
-plt.bar(x - bar_width/2, chronos_means, width=bar_width, label='EmuRAN', color='#1f77b4', edgecolor='black', linewidth=1.5)
+plt.bar(x - bar_width/2, chronos_means, width=bar_width, label='Chronos', color='#1f77b4', edgecolor='black', linewidth=1.5)
 # Linux (right bar, orange)
 plt.bar(x + bar_width/2, linux_means, width=bar_width, label='Linux', color='#ff7f0e', edgecolor='black', linewidth=1.5)
 

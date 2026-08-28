@@ -32,7 +32,7 @@ x = np.arange(len(groups))
 bar_width = 0.35
 
 fig, ax = plt.subplots(figsize=(2.9, 2))
-b1 = ax.bar(x - bar_width/2, chronos_avgs, bar_width, label="EmuRAN", color='red',      edgecolor='black', linewidth=1.5)
+b1 = ax.bar(x - bar_width/2, chronos_avgs, bar_width, label="Chronos", color='red',      edgecolor='black', linewidth=1.5)
 b2 = ax.bar(x + bar_width/2, emane_avgs,   bar_width, label="EMANE",   color='steelblue', edgecolor='black', linewidth=1.5)
 # ax.bar_label(b1, fmt="%.1f ms", padding=3, fontsize=8)
 # ax.bar_label(b2, fmt="%.1f ms", padding=3, fontsize=8)

@@ -64,7 +64,7 @@ bar_width = 0.35
 fig = plt.figure(figsize=(1.8,2.5))
 
 bars1 = plt.bar(x + bar_width/2, server_values, bar_width,
-                label="EmuRAN", color='tab:blue',
+                label="Chronos", color='tab:blue',
                 edgecolor='black', linewidth=1.5)
 bars2 = plt.bar(x - bar_width/2, client_values, bar_width,
                 label="Linux", color='tab:orange',

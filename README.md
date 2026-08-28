@@ -1,9 +1,9 @@
-# EmuRAN Artifact
+# Chronos Artifact
 
-This is the artifact for **EmuRAN: Scalable and Cost-Effective Cloud-based RAN
+This is the artifact for **Chronos: Scalable and Cost-Effective Cloud-based RAN
 Emulation System**.
 
-EmuRAN is a cloud-deployable RAN emulation system built around four ideas:
+Chronos is a cloud-deployable RAN emulation system built around four ideas:
 
 1. Bypass the compute- and bandwidth-intensive PHY layer using nFAPI.
 2. Virtualize time so cloud preemptions and network delays do not cause RAN
@@ -23,7 +23,7 @@ The artifact supports:
 
 - **Artifacts Available:** the source, deployment scripts, experiment data, and
   plotting workflow are publicly available in this repository.
-- **Artifacts Evaluated—Functional:** evaluators can inspect a running EmuRAN
+- **Artifacts Evaluated—Functional:** evaluators can inspect a running Chronos
   deployment on Powder and verify end-to-end operation.
 - **Results Reproduced:** evaluators can regenerate the paper plots from the
   supplied data and reproduce the scale-dependent dilation result on Powder.
@@ -39,7 +39,7 @@ cd EmuRAN-Draft-Artifact
 
 | Path | Contents |
 | --- | --- |
-| [`code/`](code/) | EmuRAN virtual-time, synchronization, middlebox, gNB, and UE implementations. |
+| [`code/`](code/) | Chronos virtual-time, synchronization, middlebox, gNB, and UE implementations. |
 | [`deployment/`](deployment/) | Powder/Emulab provisioning scripts, Kubernetes Helm charts, and operational scripts. |
 | [`results/data/`](results/data/) | Raw logs, packet captures, processed data, helper modules, and plotting scripts. |
 | [`results/output/`](results/output/) | Prepared and newly generated PDF plots. |
@@ -102,7 +102,7 @@ paths.
 
 ## Hosted Powder evaluation
 
-The authors provide a running EmuRAN deployment on Powder from **September 1
+The authors provide a running Chronos deployment on Powder from **September 1
 through September 15**.
 
 ### Request access
@@ -139,7 +139,7 @@ kubectl logs <ue-pod> -c dp
 
 Use the pod names returned by `kubectl`. The expected evidence is:
 
-- Kubernetes nodes are `Ready` and EmuRAN pods are `Running`.
+- Kubernetes nodes are `Ready` and Chronos pods are `Running`.
 - The global coordinator and proxy advance coordinated RAN slots.
 - The gNB connects to the core.
 - The UE synchronizes and registers.
@@ -152,7 +152,7 @@ provided with the access instructions.
 ## Reproduce the scale-dependent dilation result
 
 The hosted Powder experiment reproduces a key paper result: as the number of
-emulated gNB/UE pairs increases on a fixed compute allocation, EmuRAN increases
+emulated gNB/UE pairs increases on a fixed compute allocation, Chronos increases
 its dilation factor. This gives components additional wall-clock time per unit
 of virtual time and preserves coordinated slot execution when compute becomes
 constrained.
@@ -182,7 +182,7 @@ kubectl logs globalsc --since=5m | grep "Dilation factor:" | \
 
 The global coordinator reports one sample per 1,000 completed slots. A factor
 near `1` means the emulation is keeping pace with real time. A factor above `1`
-means EmuRAN is allocating additional wall-clock time to complete the virtual
+means Chronos is allocating additional wall-clock time to complete the virtual
 slots.
 
 The result is reproduced when dilation remains near real time while compute
@@ -195,7 +195,7 @@ continues.
 
 | Path | Role |
 | --- | --- |
-| [`code/supervisor/`](code/supervisor/) | Patched Linux 5.15/KVM source that serves guest `RDTSC` reads from EmuRAN's virtual TSC. |
+| [`code/supervisor/`](code/supervisor/) | Patched Linux 5.15/KVM source that serves guest `RDTSC` reads from Chronos's virtual TSC. |
 | [`code/slot_monitor/`](code/slot_monitor/) | `custom_tsc` module and slot-monitor utilities controlling virtual time. |
 | [`code/middlebox/`](code/middlebox/) | Distributed multi-UE nFAPI proxy and slot-completion logic. |
 | [`code/gnb/`](code/gnb/) | Modified OpenAirInterface gNB running in nFAPI VNF/emulated-L1 mode. |
@@ -223,7 +223,7 @@ Kubernetes cluster.
 | --- | --- |
 | `core/` | Mobile core and subscriber database |
 | `globalsc/` | Global slot coordinator |
-| `proxy/` | Distributed EmuRAN middleboxes |
+| `proxy/` | Distributed Chronos middleboxes |
 | `gnb/` | OAI gNB instances |
 | `ue/` | OAI UE instances and data-plane measurement sidecars |
 | `persistue/` | Persistent UE support used by selected experiments |

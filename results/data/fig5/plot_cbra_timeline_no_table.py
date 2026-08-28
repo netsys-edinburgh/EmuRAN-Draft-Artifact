@@ -24,9 +24,9 @@ ARROW_COLORS = ("#1a6fbd", "#c47d00", "#1e8f4e", "#b52828")
 
 
 def read_events(csv_path: Path) -> tuple[list[Event], list[Event], list[Event]]:
-    """Read all Testbed, EmuRAN, and NS3 event slots from the figure CSV."""
+    """Read all Testbed, Chronos, and NS3 event slots from the figure CSV."""
     testbed: list[Event] = []
-    emuran: list[Event] = []
+    chronos: list[Event] = []
     ns3: list[Event] = []
 
     with csv_path.open(newline="", encoding="utf-8") as handle:
@@ -40,19 +40,19 @@ def read_events(csv_path: Path) -> tuple[list[Event], list[Event], list[Event]]:
             testbed.append(
                 Event(number, int(row["# Slot \n Testbed"]), source, destination)
             )
-            emuran.append(
+            chronos.append(
                 Event(number, int(row["# Slot \n Chronos"]), source, destination)
             )
             ns3_slot = row["# Slot \n NS3"].strip()
             if ns3_slot.lower() != "skipped":
                 ns3.append(Event(number, int(ns3_slot), source, destination))
 
-    if len(testbed) != 4 or len(emuran) != 4 or len(ns3) != 3:
+    if len(testbed) != 4 or len(chronos) != 4 or len(ns3) != 3:
         raise ValueError(
-            f"expected 4 Testbed, 4 EmuRAN, and 3 NS3 events in {csv_path}; "
-            f"found {len(testbed)}, {len(emuran)}, and {len(ns3)}"
+            f"expected 4 Testbed, 4 Chronos, and 3 NS3 events in {csv_path}; "
+            f"found {len(testbed)}, {len(chronos)}, and {len(ns3)}"
         )
-    return testbed, emuran, ns3
+    return testbed, chronos, ns3
 
 
 def plot_timeline(
@@ -147,11 +147,11 @@ def plot_timeline(
 
 
 def generate(csv_path: Path, output: Path) -> None:
-    testbed, emuran, ns3 = read_events(csv_path)
+    testbed, chronos, ns3 = read_events(csv_path)
 
     fig, axes = plt.subplots(3, 1, figsize=(8, 3))
     plot_timeline(axes[0], testbed, "Testbed")
-    plot_timeline(axes[1], emuran, "EmuRAN")
+    plot_timeline(axes[1], chronos, "Chronos")
     plot_timeline(axes[2], ns3, "NS3", skipped_msg4=True)
 
     # Match the reference PDF's 558 × 68.376 pt stacked plotting areas.

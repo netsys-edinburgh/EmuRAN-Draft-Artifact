@@ -77,7 +77,7 @@ def main():
     for dirname, marker, color in dirs:
         if os.path.isdir(dirname):
             stats = collect_ue_stats(dirname)
-            plot_ue_stats(stats, label='EmuRAN' if os.path.basename(dirname) == 'Chronos' else 'EMANE', marker=marker, color=color, linestyle='--')
+            plot_ue_stats(stats, label='Chronos' if os.path.basename(dirname) == 'Chronos' else 'EMANE', marker=marker, color=color, linestyle='--')
         else:
             print(f"Directory '{dirname}' not found. Skipping.")
 

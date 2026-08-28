@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Fig for eval.tex Sec 6.1 (Fidelity / link adaptation): settled MCS and DL
-goodput vs SINR under the EMURAN SINR-based channel model, mean +/- 95% CI
+goodput vs SINR under the Chronos SINR-based channel model, mean +/- 95% CI
 over n=3 seeded runs per point (panels a-b). Same channel model demonstrated
 in the closed-loop xApp use case (Sec 7.2). Panels c-e show time-series
 evolution of cwnd, BLER, and total HARQ retransmissions, mean over n=3 reps
@@ -318,7 +318,7 @@ ax.set_ylim(0, max(means) * 1.3)
 for f, name in [(fig_a, "panel_a_mcs_goodput"), (fig_b, "panel_b_cwnd"),
                  (fig_c, "panel_c_bler"), (fig_d, "panel_d_harq")]:
     f.tight_layout(pad=0.3)
-    out_path = f"{OUT}/emuran_sinr_{name}.pdf"
+    out_path = f"{OUT}/chronos_sinr_{name}.pdf"
     f.savefig(out_path, bbox_inches="tight")
     print(f"wrote {out_path}")
 print("mcs:", list(zip(mcs_x, mcs_y, mcs_ci)))

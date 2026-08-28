@@ -14,7 +14,7 @@
 \setlist{nosep,leftmargin=*}
 \newcommand{\code}[1]{\texttt{#1}}
 
-\title{Artifact: EmuRAN: Scalable and Cost-Effective Cloud-based RAN Emulation System}
+\title{Artifact: Chronos: Scalable and Cost-Effective Cloud-based RAN Emulation System}
 \author{}
 \date{}
 
@@ -23,16 +23,16 @@
 
 \section{Artifact overview}
 
-This artifact accompanies the paper \emph{EmuRAN: Scalable and Cost-Effective
+This artifact accompanies the paper \emph{Chronos: Scalable and Cost-Effective
 Cloud-based RAN Emulation System}.  Its purpose is to make the implementation available for inspection,
-provide the scripts used to deploy EmuRAN, provide the paper's plot outputs and
-their underlying data, and demonstrate that the EmuRAN code is functional on a
+provide the scripts used to deploy Chronos, provide the paper's plot outputs and
+their underlying data, and demonstrate that the Chronos code is functional on a
 Powder/Emulab deployment.
 
 The evaluation combines two complementary forms of evidence.  First, the
 artifact supplies the data and scripts used to generate the plots in the
 paper.  Second, the hosted Powder deployment gives evaluators a hands-on
-view of EmuRAN operating end to end: its components start, coordinate RAN
+view of Chronos operating end to end: its components start, coordinate RAN
 slots, attach a UE, and carry data-plane traffic.
 
 \subsection{Badge scope}
@@ -44,7 +44,7 @@ The artifact is prepared to support all three requested badges:
   experiment data, and plotting scripts are publicly available in the GitHub
   repository.
   \item \textbf{Artifacts Evaluated--Functional:} evaluators connect to the
-  hosted Powder deployment and verify EmuRAN's end-to-end operation.
+  hosted Powder deployment and verify Chronos's end-to-end operation.
   \item \textbf{Results Reproduced:} evaluators run the plotting notebook and
   reproduce the key scalability result on Powder by measuring dilation at
   increasing gNB/UE scale.
@@ -56,7 +56,7 @@ The artifact has four main components.
 
 \subsection{Source code}
 
-The \code{code/} directory contains the implementation of EmuRAN:
+The \code{code/} directory contains the implementation of Chronos:
 
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.66\linewidth}}
 \toprule
@@ -79,7 +79,7 @@ sets so that the evaluated implementation is preserved in full.
 \subsection{Deployment scripts}
 
 The \code{deployment/} directory contains the automation used to prepare and
-run EmuRAN:
+run Chronos:
 
 \begin{itemize}
   \item \code{deployment/provisioning/profile.py} is an Emulab/Powder profile
@@ -240,7 +240,7 @@ scale, available compute, and the dilation factor.
 
 \section{Access and evaluation window}
 
-The authors provide a running EmuRAN deployment on Powder for the artifact
+The authors provide a running Chronos deployment on Powder for the artifact
 evaluation period from \textbf{September 1 through September 15}.  The authors
 handle the Powder reservation, profile instantiation, kernel build, Kubernetes
 cluster, and repository dependencies so evaluators can begin directly with
@@ -285,13 +285,13 @@ kubectl get nodes -o wide
 kubectl get pods -A
 \end{verbatim}
 
-The expected nodes should report \code{Ready}, and the provided EmuRAN pods
+The expected nodes should report \code{Ready}, and the provided Chronos pods
 should report \code{Running}.  Topology changes should be made only through
 the prescribed scale-reproduction workflow and access instructions supplied
 through HotCRP.  If a component is not ready, report it through HotCRP so that
 the authors can restore the shared deployment.
 
-\subsection{Step 3: observe EmuRAN operation}
+\subsection{Step 3: observe Chronos operation}
 
 Inspect component placement and status:
 
@@ -314,7 +314,7 @@ registered, and the UE data-plane container is exchanging traffic.
 The deployment checks pass when all of the following are observed:
 
 \begin{itemize}
-  \item Kubernetes reports the expected nodes as \code{Ready} and the EmuRAN
+  \item Kubernetes reports the expected nodes as \code{Ready} and the Chronos
   pods as \code{Running};
   \item the global coordinator and proxy logs show ongoing slot coordination;
   \item the core/gNB logs show that the gNB connected;
@@ -330,7 +330,7 @@ slot coordination, UE registration, and working data-plane traffic.
 
 This experiment reproduces a key paper result: as the number of emulated
 gNB/UE pairs increases on a fixed compute allocation, the work required per
-RAN slot eventually exceeds the available real-time compute budget.  EmuRAN
+RAN slot eventually exceeds the available real-time compute budget.  Chronos
 responds by increasing its dilation factor, allowing more wall-clock time per
 unit of virtual time while preserving coordinated RAN execution.
 
@@ -349,7 +349,7 @@ kubectl logs globalsc --since=5m | grep "Dilation factor:"
 The global coordinator reports one dilation sample for each 1,000 completed
 slots.  The value is the wall-clock duration of those slots relative to their
 nominal virtual-time duration.  A factor near 1 means the emulation is keeping
-pace with real time; a factor above 1 means EmuRAN is deliberately allowing
+pace with real time; a factor above 1 means Chronos is deliberately allowing
 additional wall-clock time so all components can complete each slot.
 
 For each scale, compute the mean of the reported samples with:
@@ -369,7 +369,7 @@ The result is reproduced when the measurements show the same key trend as the
 paper: dilation remains close to real time while the fixed compute allocation
 has capacity, then increases as gNB/UE scale creates compute pressure.  Exact
 values can vary with Powder hardware and load; the reproduced result is the
-increase in dilation that enables EmuRAN to cope with insufficient compute at
+increase in dilation that enables Chronos to cope with insufficient compute at
 higher scale while continuing coordinated slot execution.
 
 \subsection{Step 6: finish the evaluation}
@@ -398,10 +398,10 @@ The evaluator should inspect the supplied code, deployment scripts, plot
 outputs, and recorded data, then connect to the authors' running Powder
 deployment during September 1--15.  Access requires only a public SSH key sent
 through HotCRP comments.  The expected outcome is evidence that the supplied
-EmuRAN implementation executes end to end with working slot coordination,
+Chronos implementation executes end to end with working slot coordination,
 registration, and data-plane traffic.  Evaluators also regenerate the paper
 plots from the supplied data and scripts and reproduce the key Powder result:
-as gNB/UE scale increases on fixed compute, EmuRAN increases its dilation
+as gNB/UE scale increases on fixed compute, Chronos increases its dilation
 factor to provide the wall-clock time required for coordinated slot execution.
 
 \end{document}

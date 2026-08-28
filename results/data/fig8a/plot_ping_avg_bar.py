@@ -32,7 +32,7 @@ def mean_ping(path: Path) -> float:
 
 
 def plot_ping_averages(data_dir: Path, output: Path) -> None:
-    emuran = [mean_ping(data_dir / "chronos_0"), mean_ping(data_dir / "chronos_3")]
+    chronos = [mean_ping(data_dir / "chronos_0"), mean_ping(data_dir / "chronos_3")]
     cots = [mean_ping(data_dir / "cots_0"), mean_ping(data_dir / "cots_3")]
 
     positions = np.arange(2)
@@ -41,9 +41,9 @@ def plot_ping_averages(data_dir: Path, output: Path) -> None:
     fig, ax = plt.subplots(figsize=(3, 2))
     ax.bar(
         positions - width / 2,
-        emuran,
+        chronos,
         width,
-        label="EmuRAN",
+        label="Chronos",
         color="red",
         edgecolor="black",
         linewidth=1.5,
@@ -71,7 +71,7 @@ def plot_ping_averages(data_dir: Path, output: Path) -> None:
     fig.savefig(output, bbox_inches="tight")
     plt.close(fig)
 
-    print(f"EmuRAN averages: conf#1={emuran[0]:.3f} ms, conf#2={emuran[1]:.3f} ms")
+    print(f"Chronos averages: conf#1={chronos[0]:.3f} ms, conf#2={chronos[1]:.3f} ms")
     print(f"COTS averages:    conf#1={cots[0]:.3f} ms, conf#2={cots[1]:.3f} ms")
     print(f"Wrote {output}")
 
