@@ -1,0 +1,35 @@
+# Python environments and local dependency installations
+/.venv/
+/venv/
+/env/
+/.plot_deps/
+
+# Python caches and test/tool state
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Jupyter-generated state
+.ipynb_checkpoints/
+*.executed.ipynb
+
+# Top-level LaTeX build intermediates (keep ae.tex and ae.pdf)
+/ae.aux
+/ae.log
+/ae.out
+/ae.toc
+/ae.fls
+/ae.fdb_latexmk
+/ae.synctex.gz
+
+# Editors and operating-system metadata
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+*:Zone.Identifier
