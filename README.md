@@ -17,6 +17,9 @@ The artifact provides the implementation, Powder/Emulab deployment automation,
 experiment data, scripts used to generate the paper plots, prepared PDF
 outputs, and access to a hosted Powder evaluation deployment.
 
+A video tutorial covering the complete artifact and Powder evaluation workflow
+will be available in this GitHub repository.
+
 ## Badge scope
 
 The artifact supports:
