@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Generate Figure 11 from the observed per-UE signaling counts."""
 
 from pathlib import Path
 

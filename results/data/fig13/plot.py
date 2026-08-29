@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Generate Figure 13 from the handover plans used in the experiment."""
 
 from pathlib import Path
 import csv
