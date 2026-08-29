@@ -110,6 +110,9 @@ paths.
 The authors provide a running Chronos deployment on Powder from **September 1
 through September 15**.
 
+A video tutorial demonstrating the complete Powder evaluation workflow will
+be available in the [GitHub repository](https://github.com/netsys-edinburgh/EmuRAN-Draft-Artifact).
+
 ### Request access
 
 Post your **public SSH key** in a comment on the paper's HotCRP
