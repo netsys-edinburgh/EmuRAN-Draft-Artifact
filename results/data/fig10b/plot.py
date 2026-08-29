@@ -45,5 +45,4 @@ ax.tick_params(axis='y', labelsize=16)
 ax.set_ylim(0, max(chronos_avgs + emane_avgs) * 1.25)
 ax.legend(fontsize=14, loc='upper left')
 plt.tight_layout()
-fig.savefig("controlvsazure.pdf", dpi=300, bbox_inches="tight")
-
+fig.savefig("fig10b.pdf", dpi=300, bbox_inches="tight")

@@ -294,7 +294,7 @@ def graph_data(noise_df: pd.DataFrame, ping_df: pd.DataFrame):
     )
 
     plt.savefig(
-        "motivation.pdf",
+        "fig2.pdf",
         format="pdf",
         dpi=1000,
         bbox_inches="tight",

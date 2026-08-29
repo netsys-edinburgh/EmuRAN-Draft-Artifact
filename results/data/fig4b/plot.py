@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                   "cpu_net_dual_axis_colored_ticks.pdf")
+                   "fig4b.pdf")
 
 CATEGORIES = ["PHY bypass", "Full PHY"]
 CPU = [0.307, 3.135]

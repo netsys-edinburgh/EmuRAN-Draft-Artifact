@@ -22,7 +22,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
-OUTPUT_PATH: Final = Path("epoll.pdf")
+OUTPUT_PATH: Final = Path("fig17.pdf")
 SEG1: Final = "seg1_kernel_to_wake_us"
 SEG2A: Final = "seg2a_lock_blocked_us"
 SEG2B_V3: Final = "seg2b_drain_us"

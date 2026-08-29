@@ -57,4 +57,4 @@ plt.legend(fontsize=9, loc='upper left')
 plt.tight_layout()
 
 # Save
-plt.savefig("evaluation-cloud-split-proxy.pdf")
+plt.savefig("fig9d.pdf")

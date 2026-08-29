@@ -28,7 +28,7 @@ def rates(path):
 def main():
     here = Path(__file__).resolve().parent
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=here / "iperf3_speeds_comparison.pdf")
+    parser.add_argument("--output", type=Path, default=here / "fig15b.pdf")
     args = parser.parse_args()
 
     series = {

@@ -35,6 +35,5 @@ ax.set_ylim(0, max(dilation) * 1.35)
 for label in ax.get_xticklabels() + ax.get_yticklabels():
     label.set_fontweight("bold")
 fig.tight_layout()
-fig.savefig(os.path.join(FIGURE_DIR, "fig_4g_enb_ue_scalability.pdf"))
-fig.savefig(os.path.join(FIGURE_DIR, "fig_4g_enb_ue_scalability.png"), dpi=200)
-print("wrote fig_4g_enb_ue_scalability.{pdf,png}")
+fig.savefig(os.path.join(FIGURE_DIR, "fig19.pdf"))
+print("wrote fig19.pdf")

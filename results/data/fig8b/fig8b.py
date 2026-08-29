@@ -73,5 +73,5 @@ for ax in (ax1, ax2):
         label.set_fontweight("bold")
 
 
-fig.savefig(os.path.join(FIGURE_DIR, "dilation_compute_throughput.pdf"))
+fig.savefig(os.path.join(FIGURE_DIR, "fig8b.pdf"))
 plt.close(fig)

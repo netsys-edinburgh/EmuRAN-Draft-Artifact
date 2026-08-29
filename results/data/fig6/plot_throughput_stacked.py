@@ -149,7 +149,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--fig6a-dir", type=Path, default=script_dir / "source_data" / "fig6a")
     parser.add_argument("--fig6b-dir", type=Path, default=script_dir / "source_data" / "fig6b")
     parser.add_argument(
-        "--output", type=Path, default=script_dir / "throughput_stacked.pdf"
+        "--output", type=Path, default=script_dir / "fig6.pdf"
     )
     return parser.parse_args()
 

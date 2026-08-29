@@ -173,7 +173,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--csv", type=Path, default=script_dir / "cbra_timeline.csv")
     parser.add_argument(
-        "--output", type=Path, default=script_dir / "cbra_timeline_no_table.pdf"
+        "--output", type=Path, default=script_dir / "fig5.pdf"
     )
     return parser.parse_args()
 

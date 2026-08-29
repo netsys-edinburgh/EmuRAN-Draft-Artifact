@@ -10,7 +10,7 @@ import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 CLIENT_CSV = os.path.join(HERE, "client.csv")
 SERVER_CSV = os.path.join(HERE, "server.csv")
-OUTPUT_PDF = os.path.join(HERE, "design-slot-checker-sync.pdf")
+OUTPUT_PDF = os.path.join(HERE, "fig4d.pdf")
 
 # =========================
 # Check files exist

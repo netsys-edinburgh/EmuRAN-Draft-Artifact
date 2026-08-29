@@ -206,7 +206,7 @@ separate desktop window.
 
 Before each plot, the cell displays the paper figure number and the plotting
 script being executed.  After the script completes, the cell renders the new
-PDF and prints its path below the image.  A complete run produces 28 PDF files
+PDF and prints its path below the image.  A complete run produces 30 PDF files
 under \code{results/output/}.  Re-running a cell replaces that cell's named
 output while leaving the source data unchanged.
 
@@ -219,7 +219,7 @@ jupyter nbconvert --to notebook --execute plot.ipynb \
 find results/output -maxdepth 1 -name '*.pdf' | wc -l
 \end{verbatim}
 
-The expected PDF count is \code{28}.  If a cell reports that it cannot find
+The expected PDF count is \code{30}.  If a cell reports that it cannot find
 \code{results/}, stop Jupyter and launch it again from the artifact root.  If
 a plotting script fails, the cell reports the script's exit code and relevant
 error message.

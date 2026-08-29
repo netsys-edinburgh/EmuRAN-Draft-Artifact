@@ -92,7 +92,7 @@ Each code cell:
 2. writes a fresh PDF to `results/output/`; and
 3. displays that newly generated PDF inline.
 
-Run one cell for one figure, or select **Run All**. A complete run produces 28
+Run one cell for one figure, or select **Run All**. A complete run produces 30
 PDF files in `results/output/`.
 
 The complete notebook can also be executed non-interactively:
@@ -104,7 +104,7 @@ jupyter nbconvert --to notebook --execute plot.ipynb \
 find results/output -maxdepth 1 -name '*.pdf' | wc -l
 ```
 
-The expected PDF count is `28`. The notebook uses paths relative to the
+The expected PDF count is `30`. The notebook uses paths relative to the
 repository root, so it can be cloned and run without editing machine-specific
 paths.
 

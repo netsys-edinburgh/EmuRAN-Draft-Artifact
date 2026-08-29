@@ -21,7 +21,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
-OUTPUT_PATH = Path("emane_cdf.pdf")
+OUTPUT_PATH = Path("fig10a.pdf")
 WAIT_COLUMN = "wait_ms"
 
 

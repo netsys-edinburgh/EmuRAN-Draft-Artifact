@@ -2,7 +2,7 @@ import csv, os
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.ticker import ScalarFormatter, FixedLocator, FixedFormatter
+from matplotlib.ticker import ScalarFormatter, FixedLocator, FixedFormatter, NullLocator
 
 FIGURE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSV_PATH = os.path.join(FIGURE_DIR, "gNB_DILATION", "results.csv")
@@ -15,6 +15,7 @@ dilation = [float(r["mean_dilation"]) for r in recs]
 dilation_err = [float(r["sd_dilation"]) for r in recs]
 
 LABEL_FS, TICK_FS = 6.5, 5.5
+X_LABEL_FS, X_TICK_FS = 5.0, 4.5
 plt.rcParams.update({
     "font.family": "DejaVu Sans", "font.weight": "bold",
     "axes.labelweight": "bold",
@@ -29,13 +30,15 @@ ax.set_xlim(15, 500)
 ax.set_ylim(bottom=1)
 ax.errorbar(ue, dilation, yerr=dilation_err, fmt="s--", color="tab:red",
             linewidth=0.8, markersize=1.8, capsize=1.5, elinewidth=0.6)
-ax.set_xlabel("UEs Attached", fontsize=LABEL_FS, fontweight="bold", labelpad=1)
+ax.set_xlabel("UEs Attached", fontsize=X_LABEL_FS, fontweight="bold", labelpad=1)
 ax.set_ylabel("Dilation Factor", fontsize=LABEL_FS, fontweight="bold", labelpad=1)
 ax.set_xticks([15, 100, 500])
 ax.xaxis.set_major_formatter(ScalarFormatter())
+ax.xaxis.set_minor_locator(NullLocator())
 ax.set_yticks([1, 10])
 ax.yaxis.set_major_formatter(ScalarFormatter())
-ax.tick_params(labelsize=TICK_FS, pad=1, length=2, width=0.6)
+ax.tick_params(axis="y", labelsize=TICK_FS, pad=1, length=2, width=0.6)
+ax.tick_params(axis="x", labelsize=X_TICK_FS, pad=1, length=2, width=0.6)
 for spine in ax.spines.values():
     spine.set_linewidth(0.6)
 
@@ -50,13 +53,14 @@ gnb_ticks_ue = [15, 100, 500]
 gnb_ticks_labels = [f"{v/15:.0f}" if v/15 >= 1 else f"{v/15:.1f}" for v in gnb_ticks_ue]
 ax2.xaxis.set_major_locator(FixedLocator(gnb_ticks_ue))
 ax2.xaxis.set_major_formatter(FixedFormatter(gnb_ticks_labels))
-ax2.set_xlabel("Number of gNBs", fontsize=LABEL_FS, fontweight="bold", labelpad=1)
-ax2.tick_params(labelsize=TICK_FS, pad=1, length=2, width=0.6)
+ax2.xaxis.set_minor_locator(NullLocator())
+ax2.set_xlabel("Number of gNBs", fontsize=X_LABEL_FS, fontweight="bold", labelpad=1)
+ax2.tick_params(axis="x", labelsize=X_TICK_FS, pad=1, length=2, width=0.6)
 for spine in ax2.spines.values():
     spine.set_linewidth(0.6)
 for label in ax2.get_xticklabels():
     label.set_fontweight("bold")
 
-fig.savefig(os.path.join(FIGURE_DIR, "fig8c_small_v2.pdf"))
-print("wrote fig8c_small_v2.pdf")
+fig.savefig(os.path.join(FIGURE_DIR, "fig8c.pdf"))
+print("wrote fig8c.pdf")
 print(list(zip(ue, dilation, dilation_err)))

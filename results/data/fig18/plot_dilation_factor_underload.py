@@ -68,7 +68,7 @@ def parse_args() -> argparse.Namespace:
         "--data", type=Path, default=figure_dir / "dilation_query_data"
     )
     parser.add_argument(
-        "--output", type=Path, default=figure_dir / "dilation_factor_underload.pdf"
+        "--output", type=Path, default=figure_dir / "fig18.pdf"
     )
     return parser.parse_args()
 

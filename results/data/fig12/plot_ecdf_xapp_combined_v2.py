@@ -10,7 +10,7 @@ Data: local ECDF data and captured 18dB SINR, 150s runs:
   A  = bler005_18db_150s_hg3_r2  (target 0.05)
   B  = bler020_18db_150s_hg3     (target 0.20)
   A' = bler005_18db_150s_hg3_r3b (target 0.05)
-Output: ecdf_xapp_combined_v2.pdf in this script's directory.
+Output: fig12.pdf in this script's directory.
 """
 import json
 import os
@@ -20,7 +20,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(ROOT, "ecdf_xapp_combined_v2.pdf")
+OUT = os.path.join(ROOT, "fig12.pdf")
 ECDF_DATA = os.path.join(ROOT, "ecdf", "ul_ecdf_steps.json")
 
 plt.rcParams.update({

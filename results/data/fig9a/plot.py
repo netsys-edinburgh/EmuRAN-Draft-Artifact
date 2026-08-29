@@ -100,7 +100,7 @@ def main():
         label.set_fontweight('bold')
         label.set_fontsize(16)
     plt.tight_layout()
-    plt.savefig('scalability-chronos-vs-emane-data-plane.pdf', dpi=300)
+    plt.savefig('fig9a.pdf', dpi=300)
 
 if __name__ == "__main__":
     main()

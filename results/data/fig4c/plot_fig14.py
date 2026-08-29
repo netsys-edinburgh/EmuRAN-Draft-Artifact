@@ -44,4 +44,4 @@ plt.legend(fontsize=9)
 plt.tight_layout()
 fig.text(0.01, 0.01, '(c)', ha='left', va='bottom',
          fontsize=10, fontweight='bold')
-plt.savefig('evaluation-hypervisor-prevent-overrunning.pdf', dpi=300)
+plt.savefig('fig4c.pdf', dpi=300)

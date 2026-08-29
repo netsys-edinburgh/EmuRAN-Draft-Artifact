@@ -16,7 +16,7 @@ def ecdf(values):
 def main():
     here = Path(__file__).resolve().parent
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=here / "cdf_slot_completion_time.pdf")
+    parser.add_argument("--output", type=Path, default=here / "fig15a.pdf")
     args = parser.parse_args()
 
     groups = {

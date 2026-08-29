@@ -51,7 +51,7 @@ def plot(data):
         label.set_fontsize(16)
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
-    plt.savefig('evaluation-dilation-number-of-nodes.pdf', dpi=300)
+    plt.savefig('fig16.pdf', dpi=300)
 
 if __name__ == "__main__":
     data = collect_data()

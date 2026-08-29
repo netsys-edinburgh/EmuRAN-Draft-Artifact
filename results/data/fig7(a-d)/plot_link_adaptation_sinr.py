@@ -315,10 +315,10 @@ ax.tick_params(axis="x", labelsize=TICK_FS, pad=1)
 plt.setp(ax.get_xticklabels(), fontweight="bold")
 ax.set_ylim(0, max(means) * 1.3)
 
-for f, name in [(fig_a, "panel_a_mcs_goodput"), (fig_b, "panel_b_cwnd"),
-                 (fig_c, "panel_c_bler"), (fig_d, "panel_d_harq")]:
+for f, name in [(fig_a, "fig7a"), (fig_b, "fig7b"),
+                 (fig_c, "fig7c"), (fig_d, "fig7d")]:
     f.tight_layout(pad=0.3)
-    out_path = f"{OUT}/chronos_sinr_{name}.pdf"
+    out_path = f"{OUT}/{name}.pdf"
     f.savefig(out_path, bbox_inches="tight")
     print(f"wrote {out_path}")
 print("mcs:", list(zip(mcs_x, mcs_y, mcs_ci)))

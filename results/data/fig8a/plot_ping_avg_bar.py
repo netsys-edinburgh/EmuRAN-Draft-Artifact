@@ -88,8 +88,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output",
         type=Path,
-        default=script_dir / "ping_avg_bar.pdf",
-        help="output figure path (default: fig8/ping_avg_bar.pdf)",
+        default=script_dir / "fig8a.pdf",
+        help="output figure path (default: fig8a.pdf)",
     )
     return parser.parse_args()
 

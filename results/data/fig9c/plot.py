@@ -33,7 +33,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_GLOBALSC_CSV = REPOSITORY_ROOT / "globalsc_cdf" / "10k.csv"
-OUTPUT_PATH = SCRIPT_DIR / "evaluation-globalsc-cdf-and-dilation-factor.pdf"
+OUTPUT_PATH = SCRIPT_DIR / "fig9c.pdf"
 
 
 def save_combined_figure(

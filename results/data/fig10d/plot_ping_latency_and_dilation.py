@@ -76,7 +76,7 @@ def plot_dual_axis(data):
 
     fig.tight_layout()
     # plt.title("Average UE ping latency (left axis) and Dilation factor (right axis)\nvs. Size of Network Latencies")  # 已去除标题
-    plt.savefig('evaluation-dilation-network-latencies.pdf', dpi=300)
+    plt.savefig('fig10d.pdf', dpi=300)
 
 
 if __name__ == "__main__":
