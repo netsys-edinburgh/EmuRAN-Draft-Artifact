@@ -17,8 +17,9 @@ The artifact provides the implementation, Powder/Emulab deployment automation,
 experiment data, scripts used to generate the paper plots, prepared PDF
 outputs, and access to a hosted Powder evaluation deployment.
 
-A video tutorial covering the complete artifact and Powder evaluation workflow
-will be available in this GitHub repository.
+The repository includes
+[`chronos-artifact.mp4`](chronos-artifact.mp4), a video tutorial covering the
+complete artifact and Powder evaluation workflow.
 
 ## Badge scope
 
@@ -113,8 +114,8 @@ paths.
 The authors provide a running Chronos deployment on Powder from **September 1
 through September 15**.
 
-A video tutorial demonstrating the complete Powder evaluation workflow will
-be available in the [GitHub repository](https://github.com/netsys-edinburgh/EmuRAN-Draft-Artifact).
+The video tutorial [`chronos-artifact.mp4`](chronos-artifact.mp4) demonstrates
+the complete Powder evaluation workflow.
 
 ### Request access
 
