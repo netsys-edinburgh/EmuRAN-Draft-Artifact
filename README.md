@@ -127,34 +127,7 @@ HotCRP. Its general form is:
 ssh -i <private-key> <user>@<host>
 ```
 
-### Verify the deployment
-
-From the provided controller environment:
-
-```bash
-kubectl get nodes -o wide
-kubectl get pods -A
-kubectl get pods -o wide
-kubectl logs globalsc
-kubectl logs <proxy-pod>
-kubectl logs <gnb-pod>
-kubectl logs <ue-pod> -c ue
-kubectl logs <ue-pod> -c dp
-```
-
-Use the pod names returned by `kubectl`. The expected evidence is:
-
-- Kubernetes nodes are `Ready` and Chronos pods are `Running`.
-- The global coordinator and proxy advance coordinated RAN slots.
-- The gNB connects to the core.
-- The UE synchronizes and registers.
-- The UE data-plane container exchanges traffic successfully.
-
-If a shared component is unhealthy, report it through HotCRP so the authors can
-restore it. Make topology changes only through the scale-reproduction workflow
-provided with the access instructions.
-
-## Reproduce the scale-dependent dilation result
+## Run Chronos and reproduce scale-dependent dilation
 
 The hosted Powder experiment reproduces a key paper result: as the number of
 emulated gNB/UE pairs increases on a fixed compute allocation, Chronos increases
@@ -162,37 +135,35 @@ its dilation factor. This gives components additional wall-clock time per unit
 of virtual time and preserves coordinated slot execution when compute becomes
 constrained.
 
-The HotCRP access instructions provide the available scale points and the
-command used to advance between them. At each scale:
-
-1. Wait for all expected gNB and UE pods to run and register.
-2. Exclude deployment startup from the measurement interval.
-3. Collect at least five minutes of global-coordinator dilation samples.
-4. Record the scale and mean dilation factor.
-5. Repeat for at least three increasing scale points.
-
-Inspect the samples:
+After connecting to `node0` using the SSH command supplied through HotCRP,
+connect from `node0` to the controller and enter the deployment directory:
 
 ```bash
-kubectl logs globalsc --since=5m | grep "Dilation factor:"
+ssh ubuntu@10.2.1.2
+cd chronos-auto-deploy
 ```
 
-Calculate their mean:
+For each scale in `1`, `10`, `50`, `100`, `200`, and `300`:
 
-```bash
-kubectl logs globalsc --since=5m | grep "Dilation factor:" | \
-  awk -F'Dilation factor: ' \
-  '{sum += $2; n += 1} END {if (n) print sum/n; else print "no samples"}'
-```
+1. Open `values.yaml` and set both `numberGNB` and `numberUE` to the same
+   scale value.
+2. Run `./run_experiment.sh` to deploy Chronos.
+3. In the interactive interface, press `p` to display the pods. Wait until all
+   expected pods are running.
+4. Run `./core-logs.sh` and confirm that all gNBs and UEs are connected.
+5. In the interactive interface, enter `l globalsc` to display the global
+   coordinator log. Observe and record the dilation value.
+6. Run `./teardown-experiment.sh` and wait for the deployment to be removed.
+7. Change both scale values in `values.yaml` to the next value and repeat.
 
-The global coordinator reports one sample per 1,000 completed slots. A factor
-near `1` means the emulation is keeping pace with real time. A factor above `1`
-means Chronos is allocating additional wall-clock time to complete the virtual
-slots.
+Do not start the next scale until the previous deployment has been torn down.
+A dilation factor near `1` means that the emulation is keeping pace with real
+time; a value above `1` means Chronos allocates additional wall-clock time to
+complete each unit of virtual time.
 
 The result is reproduced when dilation remains near real time while compute
 capacity is sufficient and then rises as increasing gNB/UE scale creates
-compute pressure. Exact values can vary with Powder hardware and load; the key
+compute pressure. Record the value observed at every scale; the reproduced
 result is the increasing dilation trend while coordinated slot execution
 continues.
 

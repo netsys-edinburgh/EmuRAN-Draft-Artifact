@@ -277,58 +277,18 @@ Do not change SSH authorization files or share the connection details outside
 the artifact-evaluation process.  If login fails, report the exact SSH error
 through HotCRP; do not post the private key.
 
-\subsection{Step 2: inspect the running deployment}
+\subsection{Step 2: connect to the controller}
 
-The authors provide access to the already provisioned controller environment.
-From that environment, check the cluster and deployed components:
-
-\begin{verbatim}
-kubectl get nodes -o wide
-kubectl get pods -A
-\end{verbatim}
-
-The expected nodes should report \code{Ready}, and the provided Chronos pods
-should report \code{Running}.  Topology changes should be made only through
-the prescribed scale-reproduction workflow and access instructions supplied
-through HotCRP.  If a component is not ready, report it through HotCRP so that
-the authors can restore the shared deployment.
-
-\subsection{Step 3: observe Chronos operation}
-
-Inspect component placement and status:
+The SSH command supplied through HotCRP connects to \code{node0}.  Node 0 is
+the entry node for the experiment.  From \code{node0}, connect to the
+controller and enter its Chronos deployment directory:
 
 \begin{verbatim}
-kubectl get pods -o wide
-kubectl logs globalsc
-kubectl logs <proxy-pod>
-kubectl logs <gnb-pod>
-kubectl logs <ue-pod> -c ue
-kubectl logs <ue-pod> -c dp
+ssh ubuntu@10.2.1.2
+cd chronos-auto-deploy
 \end{verbatim}
 
-Replace bracketed pod names with names reported by \code{kubectl}.  These are
-read-only inspection commands.  The logs should show that the global
-coordinator and proxy are advancing slots, the gNB is connected, the UE has
-registered, and the UE data-plane container is exchanging traffic.
-
-\subsection{Step 4: deployment success criteria}
-
-The deployment checks pass when all of the following are observed:
-
-\begin{itemize}
-  \item Kubernetes reports the expected nodes as \code{Ready} and the Chronos
-  pods as \code{Running};
-  \item the global coordinator and proxy logs show ongoing slot coordination;
-  \item the core/gNB logs show that the gNB connected;
-  \item the UE log shows successful synchronization and registration; and
-  \item the UE data-plane sidecar reports that the data plane is up and emits
-  successful traffic measurements.
-\end{itemize}
-
-Success is determined by the operational checks above: component readiness,
-slot coordination, UE registration, and working data-plane traffic.
-
-\subsection{Step 5: reproduce scale-dependent dilation}
+\subsection{Step 3: configure and deploy one scale}
 
 This experiment reproduces a key paper result: as the number of emulated
 gNB/UE pairs increases on a fixed compute allocation, the work required per
@@ -336,52 +296,58 @@ RAN slot eventually exceeds the available real-time compute budget.  Chronos
 responds by increasing its dilation factor, allowing more wall-clock time per
 unit of virtual time while preserving coordinated RAN execution.
 
-The authors provide several preconfigured scale points on the hosted Powder
-deployment.  The exact scale values and the command that advances between
-them are included with the SSH instructions in HotCRP so they can be matched
-to the available Powder reservation.  At each scale, wait until the expected
-gNB and UE pods are running and registered, then record recent global
-coordinator samples:
+Evaluate the following gNB/UE pair counts in order:
 
 \begin{verbatim}
-kubectl get pods -o wide
-kubectl logs globalsc --since=5m | grep "Dilation factor:"
+1, 10, 50, 100, 200, 300
 \end{verbatim}
 
-The global coordinator reports one dilation sample for each 1,000 completed
-slots.  The value is the wall-clock duration of those slots relative to their
-nominal virtual-time duration.  A factor near 1 means the emulation is keeping
-pace with real time; a factor above 1 means Chronos is deliberately allowing
-additional wall-clock time so all components can complete each slot.
-
-For each scale, compute the mean of the reported samples with:
+For the first scale, edit \code{values.yaml}.  Set \code{numberGNB} and
+\code{numberUE} to the same value.  Deploy that configuration with:
 
 \begin{verbatim}
-kubectl logs globalsc --since=5m | grep "Dilation factor:" | \
-  awk -F'Dilation factor: ' \
-  '{sum += $2; n += 1} END {if (n) print sum/n; else print "no samples"}'
+./run_experiment.sh
 \end{verbatim}
 
-Record the scale and mean dilation factor, then advance to the next supplied
-scale point and repeat.  Use samples collected after all expected components
-have registered, excluding deployment startup.  At least three increasing
-scale points should be measured.
+When the interactive interface appears, press \code{p} to display pod status.
+Wait until all expected pods are running.
+
+\subsection{Step 4: verify connections and observe dilation}
+
+After all pods are running, execute the supplied core-log helper:
+
+\begin{verbatim}
+./core-logs.sh
+\end{verbatim}
+
+Confirm from these logs that all configured gNBs and UEs are connected.  In
+the interactive interface, enter \code{l globalsc} to display the global
+coordinator log.  Observe and record the dilation value for the current scale.
+A value near 1 means that the emulation is keeping pace with real time; a value
+above 1 means Chronos is allocating additional wall-clock time to complete the
+virtual slots.
+
+\subsection{Step 5: tear down and repeat}
+
+Remove the current deployment before changing scale:
+
+\begin{verbatim}
+./teardown-experiment.sh
+\end{verbatim}
+
+Wait for teardown to complete.  Then edit \code{values.yaml}, set both
+\code{numberGNB} and \code{numberUE} to the next value in the sequence, and
+repeat Steps 3--5.  Do not start a new deployment until the previous one has
+been removed.
 
 The result is reproduced when the measurements show the same key trend as the
 paper: dilation remains close to real time while the fixed compute allocation
 has capacity, then increases as gNB/UE scale creates compute pressure.  Exact
 values can vary with Powder hardware and load; the reproduced result is the
 increase in dilation that enables Chronos to cope with insufficient compute at
-higher scale while continuing coordinated slot execution.
-
-\subsection{Step 6: finish the evaluation}
-
-No cleanup or experiment termination is required from evaluators.  Log out of
-the Powder host when inspection is complete.  The authors maintain the shared
-deployment and will remove evaluator keys and terminate the experiment after
-September 15.  Report failures, missing permissions, or questions through
-HotCRP comments so that communication remains within the artifact-evaluation
-process.
+higher scale while continuing coordinated slot execution.  After recording
+the value for scale 300, run \code{./teardown-experiment.sh} once more and log
+out.  Report failures, missing permissions, or questions through HotCRP.
 
 \section{Limitations and safety notes}
 
