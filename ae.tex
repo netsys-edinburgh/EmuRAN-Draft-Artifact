@@ -1,6 +1,6 @@
-\documentclass[10pt]{article}
+\documentclass[10pt,twocolumn]{article}
 
-\usepackage[margin=1in]{geometry}
+\usepackage[margin=0.48in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{array}
@@ -8,11 +8,19 @@
 \usepackage{enumitem}
 \usepackage{hyperref}
 \usepackage{xcolor}
-\usepackage{longtable}
 
 \hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
-\setlist{nosep,leftmargin=*}
+\setlength{\columnsep}{0.22in}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1pt}
+\setlist{nosep,leftmargin=*,topsep=1pt}
 \newcommand{\code}[1]{\texttt{#1}}
+
+\makeatletter
+\renewcommand\section{\@startsection{section}{1}{0pt}{1.0ex}{0.35ex}{\normalsize\bfseries}}
+\renewcommand\subsection{\@startsection{subsection}{2}{0pt}{0.7ex}{0.25ex}{\normalsize\bfseries}}
+\renewcommand{\verbatim@font}{\ttfamily}
+\makeatother
 
 \title{Artifact: Chronos: Scalable and Cost-Effective Cloud-based RAN Emulation System}
 \author{}
@@ -59,13 +67,11 @@ The artifact is prepared to support all three requested badges:
 
 Clone the artifact repository from GitHub and enter its root directory:
 
-\begin{verbatim}
-git clone https://github.com/netsys-edinburgh/EmuRAN-Draft-Artifact.git
-cd EmuRAN-Draft-Artifact
-\end{verbatim}
+\noindent\code{git clone }\url{https://github.com/netsys-edinburgh/EmuRAN-Draft-Artifact.git}\\
+\code{cd EmuRAN-Draft-Artifact}
 
 The repository is available at
-\href{https://github.com/netsys-edinburgh/EmuRAN-Draft-Artifact}{github.com/netsys-edinburgh/EmuRAN-Draft-Artifact}.
+\href{https://github.com/netsys-edinburgh/EmuRAN-Draft-Artifact}{Chronos artifact GitHub repository}.
 All installation and notebook commands below should be run from this directory.
 
 \section{Artifact components}
@@ -76,18 +82,17 @@ The artifact has four main components.
 
 The \code{code/} directory contains the implementation of Chronos:
 
-\begin{longtable}{>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.66\linewidth}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.29\columnwidth}>{\raggedright\arraybackslash}p{0.65\columnwidth}@{}}
 \toprule
 Path & Purpose \\
 \midrule
-\endhead
-\code{code/supervisor/} & Patched Linux 5.15/KVM source.  The virtualized TSC allows guest time to be advanced or paused independently of wall-clock time. \\
-\code{code/slot\_monitor/} & The \code{custom\_tsc} kernel module, shared-memory support, and slot-monitor utilities used to control virtual time. \\
-\code{code/middlebox/} & Modified multi-UE nFAPI proxy.  It forwards traffic, tracks local slot completion, and communicates with the global slot coordinator. \\
-\code{code/gnb/} & Modified OpenAirInterface gNB source, operated in nFAPI VNF/emulated-L1 mode. \\
-\code{code/ue/} & Modified OpenAirInterface UE source, operated in standalone nFAPI PNF/emulated-L1 mode. \\
+\path{code/supervisor/} & Patched Linux 5.15/KVM source.  The virtualized TSC allows guest time to be advanced or paused independently of wall-clock time. \\
+\path{code/slot_monitor/} & The \code{custom\_tsc} kernel module, shared-memory support, and slot-monitor utilities used to control virtual time. \\
+\path{code/middlebox/} & Modified multi-UE nFAPI proxy.  It forwards traffic, tracks local slot completion, and communicates with the global slot coordinator. \\
+\path{code/gnb/} & Modified OpenAirInterface gNB source, operated in nFAPI VNF/emulated-L1 mode. \\
+\path{code/ue/} & Modified OpenAirInterface UE source, operated in standalone nFAPI PNF/emulated-L1 mode. \\
 \bottomrule
-\end{longtable}
+\end{tabular}
 
 Together these components implement PHY bypass, virtual time, slot-level
 synchronization, and distributed control/data-plane forwarding.  The gNB, UE,
@@ -214,9 +219,12 @@ The notebook can also be executed non-interactively:
 
 \begin{verbatim}
 source .venv/bin/activate
-jupyter nbconvert --to notebook --execute plot.ipynb \
-  --output plot.executed.ipynb --ExecutePreprocessor.timeout=300
-find results/output -maxdepth 1 -name '*.pdf' | wc -l
+jupyter nbconvert plot.ipynb \
+  --to notebook --execute \
+  --output plot.executed.ipynb \
+  --ExecutePreprocessor.timeout=300
+find results/output -maxdepth 1 \
+  -name '*.pdf' | wc -l
 \end{verbatim}
 
 The expected PDF count is \code{30}.  If a cell reports that it cannot find
