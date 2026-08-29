@@ -309,7 +309,7 @@ unit of virtual time while preserving coordinated RAN execution.
 Evaluate the following gNB/UE pair counts in order:
 
 \begin{verbatim}
-1, 10, 50, 100, 200, 300
+1, 10, 50, 100, 200
 \end{verbatim}
 
 For the first scale, edit \code{values.yaml}.  Set \code{numberGNB} and
@@ -356,7 +356,7 @@ has capacity, then increases as gNB/UE scale creates compute pressure.  Exact
 values can vary with Powder hardware and load; the reproduced result is the
 increase in dilation that enables Chronos to cope with insufficient compute at
 higher scale while continuing coordinated slot execution.  After recording
-the value for scale 300, run \code{./teardown-experiment.sh} once more and log
+the value for scale 200, run \code{./teardown-experiment.sh} once more and log
 out.  Report failures, missing permissions, or questions through HotCRP.
 
 \section{Limitations and safety notes}

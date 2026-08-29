@@ -149,7 +149,7 @@ ssh ubuntu@10.2.1.2
 cd chronos-auto-deploy
 ```
 
-For each scale in `1`, `10`, `50`, `100`, `200`, and `300`:
+For each scale in `1`, `10`, `50`, `100`, and `200`:
 
 1. Open `values.yaml` and set both `numberGNB` and `numberUE` to the same
    scale value.
