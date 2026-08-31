@@ -1,54 +1,75 @@
 #!/usr/bin/env python3
-"""Generate Figure 15(b) from the iperf3 logs."""
+"""Generate Figure 15(b), the standalone slot-completion-time CDF panel."""
 
 import argparse
-import re
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-RATE = re.compile(r"([0-9.]+)\s+([KMG])bits/sec")
-SCALE = {"K": 1e-3, "M": 1.0, "G": 1e3}
+
+def parse_slot_times(path):
+    """Read the slot-completion-time samples in microseconds."""
+    samples = np.loadtxt(path, dtype=int, ndmin=1)
+    if samples.size == 0:
+        raise ValueError(f"No slot-completion-time samples found in {path}")
+    return samples
 
 
-def rates(path):
-    values = []
-    for line in path.read_text(errors="ignore").splitlines():
-        if "sender" in line or "receiver" in line:
-            continue
-        match = RATE.search(line)
-        if match:
-            values.append(float(match.group(1)) * SCALE[match.group(2)])
-    if not values:
-        raise ValueError(f"No interval rates found in {path}")
-    return values
+def ecdf(samples):
+    x = np.sort(samples)
+    y = np.arange(1, len(x) + 1) / len(x)
+    return x, y
 
 
 def main():
     here = Path(__file__).resolve().parent
+    # The original combined notebook kept the slot-time samples beside fig15a.
+    data_dir = here.parent / "fig15a"
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=here / "fig15b.pdf")
     args = parser.parse_args()
 
-    series = {
-        "DL without Chronos": rates(here / "iperf_nc_dl"),
-        "DL with Chronos": rates(here / "iperf3_c_dl"),
-        "UL without Chronos": rates(here / "iperf3_nc_ul"),
-        "UL with Chronos": rates(here / "iperf3_c_ul"),
-    }
-    labels = list(series)
-    means = [np.mean(series[label]) for label in labels]
-    errors = [np.std(series[label]) for label in labels]
-    colors = ["tab:blue", "tab:orange", "tab:blue", "tab:orange"]
-    fig, ax = plt.subplots(figsize=(6.2, 3.2))
-    ax.bar(range(len(labels)), means, yerr=errors, capsize=3, color=colors, edgecolor="black")
-    ax.set_xticks(range(len(labels)), ["DL\nNo Chronos", "DL\nChronos", "UL\nNo Chronos", "UL\nChronos"])
-    ax.set_ylabel("Throughput (Mbps)")
-    ax.grid(axis="y", alpha=0.3)
-    fig.tight_layout()
+    traces = [
+        ("nc_connnect", "Idle", "#c47d00"),
+        ("nc_ping", "Ping", "#b52828"),
+        ("nc_iperfdl", "Iperf DL", "#9467bd"),
+        ("nc_iperful", "Iperf UL", "#8c564b"),
+        ("c_connect", "Chronos-Idle", "#1a6fbd"),
+        ("c_ping", "Chronos-Ping", "#17becf"),
+        ("c_iperfdl", "Chronos-Iperf DL", "#1e8f4e"),
+        ("c_iperful", "Chronos-Iperf UL", "#e377c2"),
+    ]
+
+    font_size = 13
+    fig, ax = plt.subplots(figsize=(4.87, 3.84))
+    fig.subplots_adjust(left=0.19, right=0.93, bottom=0.50, top=0.96)
+    for filename, label, color in traces:
+        x, y = ecdf(parse_slot_times(data_dir / filename))
+        ax.plot(x, y, color=color, linewidth=2.5, label=label)
+
+    ax.set_xlabel("Slot Completion Time (µs)", fontsize=16, fontweight="bold")
+    ax.set_ylabel("CDF", fontsize=16, fontweight="bold")
+    ax.set_ylim(0, 1)
+    ax.set_xlim(0, 5000)
+    ax.tick_params(labelsize=14)
+    plt.setp(ax.get_xticklabels(), fontweight="bold")
+    plt.setp(ax.get_yticklabels(), fontweight="bold")
+    ax.grid(True, alpha=0.3)
+    ax.legend(
+        fontsize=font_size,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 0.34),
+        bbox_transform=fig.transFigure,
+        ncol=2,
+        prop={"weight": "bold", "size": font_size},
+        frameon=True,
+        borderaxespad=0,
+    )
+
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(args.output, bbox_inches="tight")
+    fig.savefig(args.output)
     plt.close(fig)
     print(f"Wrote {args.output}")
 

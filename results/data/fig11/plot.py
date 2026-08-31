@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from pathlib import Path
+from typing import Tuple
 
 import matplotlib
 
@@ -21,7 +22,7 @@ OUTPUT = (
 MINUTES = range(15)
 
 
-def load_messages() -> tuple[pd.DataFrame, int]:
+def load_messages() -> Tuple[pd.DataFrame, int]:
     files = sorted(DATA_DIR.glob("ue_*/messages_per_min.csv"))
     if not files:
         raise FileNotFoundError(f"No messages_per_min.csv files found in {DATA_DIR}")

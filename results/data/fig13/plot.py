@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import csv
+from typing import Dict, List, Set, Tuple
 
 import matplotlib
 
@@ -26,9 +27,9 @@ GRID_COLS = 48
 SNAPSHOTS = (0, 300, 600, 899)
 
 
-def load_cell_index() -> dict[int, int]:
+def load_cell_index() -> Dict[int, int]:
     """Map zero-based topology cell IDs onto the compact 960-cell grid."""
-    valid_cells: set[int] = set()
+    valid_cells: Set[int] = set()
     with NEIGHBORS_FILE.open(newline="") as handle:
         for row in csv.DictReader(handle):
             for column in ("CELL", "NEIGHBOR"):
@@ -46,21 +47,21 @@ def load_cell_index() -> dict[int, int]:
 
 
 def load_handover_plans(
-    cell_index: dict[int, int],
-) -> tuple[dict[int, list[tuple[int, int]]], int]:
-    plans: dict[int, list[tuple[int, int]]] = {}
+    cell_index: Dict[int, int],
+) -> Tuple[Dict[int, List[Tuple[int, int]]], int]:
+    plans: Dict[int, List[Tuple[int, int]]] = {}
     handover_count = 0
 
     for ue_dir in DATA_DIR.glob("ue_*"):
         try:
-            ue_id = int(ue_dir.name.removeprefix("ue_"))
+            ue_id = int(ue_dir.name[len("ue_") :])
         except ValueError:
             continue
         plan_file = ue_dir / f"{ue_id}.txt"
         if not plan_file.exists():
             continue
 
-        events: list[tuple[int, int]] = []
+        events: List[Tuple[int, int]] = []
         for line in plan_file.read_text().splitlines():
             fields = [field.strip() for field in line.split(",")]
             if len(fields) < 2:
@@ -81,7 +82,7 @@ def load_handover_plans(
     return plans, handover_count
 
 
-def serving_cell(ue_id: int, events: list[tuple[int, int]], snapshot: int) -> int:
+def serving_cell(ue_id: int, events: List[Tuple[int, int]], snapshot: int) -> int:
     cell = ue_id
     for event_second, target_cell in events:
         # Preserve the original figure's convention: an event at exactly the
@@ -92,7 +93,9 @@ def serving_cell(ue_id: int, events: list[tuple[int, int]], snapshot: int) -> in
     return cell
 
 
-def occupancy_at(plans: dict[int, list[tuple[int, int]]], snapshot: int) -> np.ndarray:
+def occupancy_at(
+    plans: Dict[int, List[Tuple[int, int]]], snapshot: int
+) -> np.ndarray:
     occupancy = np.zeros(CELL_COUNT, dtype=int)
     for ue_id in range(UE_COUNT):
         cell = serving_cell(ue_id, plans.get(ue_id, []), snapshot)
